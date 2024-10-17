@@ -1,0 +1,244 @@
+openapi: 3.0.3
+info:
+  title: Product Details API
+  description: API to query product information, details, and stock, as well as to update their information.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080/api/product/'
+paths:
+  /create:
+    post:
+      operationId: "createProduct"
+      tags:
+        - Create Product
+      description: 'Operation to register a product in the inventory'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductRequest'
+      responses:
+        200:
+          description: 'Callback product created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackResponse'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+        404:
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+                
+  /update/{idProduct}:
+    put:
+      operationId: "updateProduct"
+      parameters:
+        - name : idProduct
+          in: path
+          description: The product ID
+          required: true
+          example: 'EG-100'
+          schema:
+            type: string
+      tags:
+        - Update Product
+      description: 'Operation to update a product in the inventory'
+      
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateRequest'
+      responses:
+        200:
+          description: 'Callback product created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackResponse'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+        404:
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+  /{idProduct}:
+    get:
+      operationId: "getProductDetail"
+      parameters:
+        - name : idProduct
+          in: path
+          description: The product ID
+          required: true
+          example: 'EG-100'
+          schema:
+            type: string
+      tags:
+        - Get Product
+      description: 'Operation to get  a product details in the inventory'
+      
+      responses:
+        200:
+          description: 'Callback product details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetailResponse'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+        404:
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+        500:
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCallbackErrorResponse'
+  
+components:
+  schemas:
+    ProductRequest:
+      type: object
+      required:
+        - idProduct
+        - name
+        - description
+        - price
+        - model
+      properties:
+        idProduct:
+          type: string
+          description: Unique product key
+          example: 'EG-100'
+        name:
+          type: string
+          description: Name used to identify the product
+          example: 'Wireless Bluetooth Headphones'
+        description:
+          type: string
+          description: Field that contains a general description of the product
+          example: 'Noise-canceling technology, offering up to 20 hours of playback time on a single charge. Compatible with all Bluetooth,enabled devices, including smartphones, tablets, and laptops.'
+        price:
+          type: number
+          description: Price of product
+          example: '50.00'
+        model:
+          type: string
+          description: Model of product
+          example: 'VPE-500'
+          
+    ProductDetailResponse:
+      type: object
+      required:
+        - idProduct
+        - name
+        - description
+        - price
+        - model
+      properties:
+        idProduct:
+          type: string
+          description: Unique product key
+          example: 'EG-100'
+        name:
+          type: string
+          description: Name used to identify the product
+          example: 'Wireless Bluetooth Headphones'
+        description:
+          type: string
+          description: Field that contains a general description of the product
+          example: 'Noise-canceling technology, offering up to 20 hours of playback time on a single charge. Compatible with all Bluetooth,enabled devices, including smartphones, tablets, and laptops.'
+        price:
+          type: number
+          description: Price of product
+          example: '50.00'
+        model:
+          type: string
+          description: Model of product
+          example: 'VPE-500'
+          
+    ProductUpdateRequest:
+      type: object
+      required:
+        - description
+        - model
+      properties:
+        description:
+          type: string
+          description: Field that contains a general description of the product
+          example: 'Noise-canceling technology, offering up to 20 hours of playback time on a single charge. Compatible with all Bluetooth,enabled devices, including smartphones, tablets, and laptops.'
+        model:
+          type: string
+          description: Model of product
+          example: 'VPE-500'  
+     
+    ProductCallbackResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Code'
+          example: 'POL-100'
+        message:
+          type: string
+          description: 'Code'
+          example: 'Product created'
+        timestamp:
+          type: string
+          example: '2023-12-31 12:34:56'
+          description: 'Response timestamp created'
+    ProductCallbackErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            properties:
+              code:
+                type: string
+                example: 'EG-100'
+                description: 'Error response code'
+              message:
+                type: string
+                description: 'Additional Message'
+                example: 'Product not created'
+        timestamp:
+          type: string
+          example: '2023-12-31 12:34:56'
+          description: 'Response timestamp'
+        
+    
